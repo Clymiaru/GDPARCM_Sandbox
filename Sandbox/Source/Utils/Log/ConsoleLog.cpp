@@ -1,13 +1,14 @@
 #include "pch.h"
-#include "Log.h"
+#include "ConsoleLog.h"
 
+#include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-#include "TypeAlias.h"
+#include "Utils/TypeAlias.h"
 
-SharedPtr<spdlog::logger> Utils::Log::logger;
+SharedPtr<spdlog::logger> Utils::ConsoleLog::logger;
 
-void Utils::Log::Init()
+void Utils::ConsoleLog::Init()
 {
 #if DEBUG
     spdlog::set_pattern("%^[%T] %n: %v%$");

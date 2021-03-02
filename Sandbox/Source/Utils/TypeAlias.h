@@ -9,7 +9,7 @@ using Uint32 = uint32_t;
 template <typename T>
 using ScopePtr = std::unique_ptr<T>;
 template <typename T, typename ... Args>
-constexpr ScopePtr<T> createScope(Args&& ... args)
+constexpr ScopePtr<T> createScopePtr(Args&& ... args)
 {
     return std::make_unique<T>(std::forward<Args>(args)...);
 }
@@ -17,7 +17,7 @@ constexpr ScopePtr<T> createScope(Args&& ... args)
 template <typename T>
 using SharedPtr = std::shared_ptr<T>;
 template <typename T, typename ... Args>
-constexpr SharedPtr<T> createShared(Args&& ... args)
+constexpr SharedPtr<T> createSharedPtr(Args&& ... args)
 {
     return std::make_shared<T>(std::forward<Args>(args)...);
 }
