@@ -1,10 +1,14 @@
 #pragma once
 #include <memory>
+#include <vector>
 
 using Uint = unsigned int;
 using Uint8 = uint8_t;
 using Uint16 = uint16_t;
 using Uint32 = uint32_t;
+
+template <typename T>
+using List = std::vector<T>;
 
 template <typename T>
 using ScopePtr = std::unique_ptr<T>;
