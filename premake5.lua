@@ -24,6 +24,7 @@ SourceDir = "%{ProjectName}/Source"
 
 -- Dependency Directiories --
 Dependencies = {}
+Dependencies["Log"] = "%{DependencyDir}/spdlog"
 
 project (GameName)
 	location (GameName)
@@ -45,6 +46,7 @@ project (GameName)
 
     includedirs {
         "%{prj.name}/Source",
+        "%{Dependencies.Log}/include",
 	}
 
 	defines {
@@ -69,9 +71,6 @@ project (GameName)
 
 	    postbuildcommands {
 	    }
-
-	filter "system:windows"
-		systemversion "latest"
 
 	filter "configurations:Debug"
 		defines "DEBUG"

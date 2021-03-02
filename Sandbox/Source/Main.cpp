@@ -1,6 +1,9 @@
 #include "pch.h"
 
+#include "Utils/Log.h"
+
 auto main(int argc, char** argv) -> int
 {
-	std::cout << "Hello world!";
+	Utils::Log::Init();
+	Utils::Log::Info("Test");
 }

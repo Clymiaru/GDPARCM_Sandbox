@@ -1,0 +1,3 @@
+[submodule "Sandbox/Library/spdlog"]
+	path = Sandbox/Library/spdlog
+	url = https://github.com/Clymiaru/spdlog.git
