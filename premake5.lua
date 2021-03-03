@@ -27,6 +27,7 @@ Dependencies = {}
 Dependencies["Log"] = "%{DependencyDir}/spdlog"
 Dependencies["SFML"] = "%{DependencyDir}/SFML"
 Dependencies["glad"] = "%{DependencyDir}/glad"
+Dependencies["glm"] = "%{DependencyDir}/glm"
 
 include "Sandbox/Library/glad"
 
@@ -53,6 +54,7 @@ project (GameName)
         "%{Dependencies.Log}/include",
         "%{Dependencies.SFML}/include",
         "%{Dependencies.glad}",
+         "%{Dependencies.glm}",
 	}
 
 	defines {
