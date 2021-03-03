@@ -4,6 +4,7 @@
 #include "Utils/Log/FileLog.h"
 
 #include "SFML/Graphics.hpp"
+#include "glad.h"
 
 auto main(int argc, char** argv) -> int
 {

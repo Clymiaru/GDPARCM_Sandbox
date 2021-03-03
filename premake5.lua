@@ -26,6 +26,9 @@ SourceDir = "%{ProjectName}/Source"
 Dependencies = {}
 Dependencies["Log"] = "%{DependencyDir}/spdlog"
 Dependencies["SFML"] = "%{DependencyDir}/SFML"
+Dependencies["glad"] = "%{DependencyDir}/glad"
+
+include "Sandbox/Library/glad"
 
 project (GameName)
 	location (GameName)
@@ -49,6 +52,7 @@ project (GameName)
         "%{prj.name}/Source",
         "%{Dependencies.Log}/include",
         "%{Dependencies.SFML}/include",
+        "%{Dependencies.glad}",
 	}
 
 	defines {
