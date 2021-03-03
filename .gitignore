@@ -9,4 +9,8 @@ bin-int/
 **.vcxproj.filters
 **.vcxproj.user
 
+.idea/
+
 Sandbox/Content/
+
+Sandbox/Logs/
