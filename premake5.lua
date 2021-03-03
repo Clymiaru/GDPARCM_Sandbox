@@ -25,6 +25,7 @@ SourceDir = "%{ProjectName}/Source"
 -- Dependency Directiories --
 Dependencies = {}
 Dependencies["Log"] = "%{DependencyDir}/spdlog"
+Dependencies["SFML"] = "%{DependencyDir}/SFML"
 
 project (GameName)
 	location (GameName)
@@ -47,6 +48,7 @@ project (GameName)
     includedirs {
         "%{prj.name}/Source",
         "%{Dependencies.Log}/include",
+        "%{Dependencies.SFML}/include",
 	}
 
 	defines {
@@ -54,32 +56,63 @@ project (GameName)
         "SFML_STATIC"
     }
 
-	filter {"platforms:Win64", "configurations:Debug"}
+    filter {"platforms:Win64", "configurations:Debug"}
 		libdirs {
+			"%{Dependencies.SFML}/lib"
 	    }
 
 	    postbuildcommands {
+	        ("{COPY} %{prj.location}/Library/SFML/bin/openal32.dll %{wks.location}/bin/"..OutputDir.. "/%{GameName}")
 	    }
 
+
+	filter {"platforms:Win64", "configurations:Debug"}
 		defines {
 			"ENABLE_ASSERTS"
 		}
 
-	filter {"platforms:Win64", "configurations:Release"}
-		libdirs {
-	    }
-
-	    postbuildcommands {
-	    }
-
 	filter "configurations:Debug"
 		defines "DEBUG"
-	    buildoptions "/MTd"
+	    buildoptions "/MDd"
 		runtime "Debug"
 	    symbols "on"
 
+	    links {
+			"opengl32.lib",
+            "freetype.lib",
+            "winmm.lib",
+            "gdi32.lib",
+            "openal32.lib",
+            "flac.lib",
+            "vorbisenc.lib",
+            "vorbisfile.lib",
+            "vorbis.lib",
+            "ogg.lib",
+            "sfml-audio-s-d.lib",
+            "sfml-graphics-s-d.lib",
+            "sfml-window-s-d.lib",
+            "sfml-system-s-d.lib"
+	    }
+
 	filter "configurations:Release"
         defines "RELEASE"
-        buildoptions "/MT"
+        buildoptions "/MD"
         runtime "Release"
         optimize "on"
+
+        links {
+			"opengl32.lib",
+            "freetype.lib",
+            "winmm.lib",
+            "gdi32.lib",
+            "openal32.lib",
+            "flac.lib",
+            "vorbisenc.lib",
+            "vorbisfile.lib",
+            "vorbis.lib",
+            "ogg.lib",
+            "sfml-audio-s.lib",
+            "sfml-graphics-s.lib",
+            "sfml-window-s.lib",
+            "sfml-system-s.lib"
+        }
