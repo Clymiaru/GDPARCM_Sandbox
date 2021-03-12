@@ -84,6 +84,7 @@ project (GameName)
 	    symbols "on"
 
 	    links {
+	        "glad",
 			"opengl32.lib",
             "freetype.lib",
             "winmm.lib",
