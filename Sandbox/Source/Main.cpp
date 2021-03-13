@@ -251,6 +251,59 @@ void roundRobin(const std::vector<Process> processList, int maxTimeSlice)
 	printProcessList(processes);
 }
 
+void longestJobFirst(const std::vector<Process> processList)
+{
+	auto currentTime = 0;
+	std::vector<Process*> processes;
+	std::vector<Process*> readyQueue;
+
+	Process* currentProcess = nullptr;
+
+	for (auto process : processList)
+	{
+		processes.push_back(new Process(process.ProcessID, process.ArrivalTime, process.CPUBurst));
+	}
+
+	do
+	{
+		updateArrivalTime(processes, &readyQueue);
+
+		if (currentProcess != nullptr)
+		{
+			currentProcess = currentProcess->Use(currentTime);
+		}
+
+		if (!readyQueue.empty())
+		{
+			std::ranges::sort(readyQueue,
+                [](Process* a, Process* b) -> bool
+                {
+                    return a->CPUBurst > b->CPUBurst;
+                });
+
+			if (currentProcess != nullptr)
+			{
+				if (currentProcess->CPUBurst > readyQueue.front()->CPUBurst)
+				{
+					readyQueue.push_back(currentProcess);
+					currentProcess = changeProcess(&readyQueue);
+				}
+			}
+			else
+			{
+				currentProcess = changeProcess(&readyQueue);
+			}
+
+			currentProcess->Start(currentTime);
+		}
+		
+		currentTime++;
+		updateWaitingTime(readyQueue);
+	} while (!readyQueue.empty() || currentProcess != nullptr);
+
+	printProcessList(processes);
+}
+
 auto main(int argc, char** argv) -> int
 {
 	Utils::ConsoleLog::Init();
@@ -289,6 +342,10 @@ auto main(int argc, char** argv) -> int
 	};
 
 	// firstComeFirstServe(given);
-	// shortestJobFirst(given2);
-	 roundRobin(given, 5);
+	Utils::ConsoleLog::Info("Shortest Job First");
+	shortestJobFirst(given);
+	std::cout << "\n";
+	Utils::ConsoleLog::Info("Longest Job First");
+	longestJobFirst(given);
+	// roundRobin(given, 5);
 }
