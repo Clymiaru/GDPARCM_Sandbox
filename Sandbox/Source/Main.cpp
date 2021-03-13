@@ -27,15 +27,47 @@ struct Process
 		HasStarted{false}
 	{
 	}
+
+	auto Start(int currentTime)
+	{
+		if (!HasStarted)
+		{
+			StartTime = currentTime;
+			HasStarted = true;
+		}
+	}
+
+	auto Use(int currentTime) -> Process*
+	{
+		CPUBurst--;
+		if (CPUBurst == 0)
+		{
+			EndTime = currentTime;
+			return nullptr;
+		}
+		return this;
+	}
+
+	void Print() const
+	{
+		Utils::ConsoleLog::Info("{0} | Start Time: {1} | End Time: {2} | Waiting Time: {3}", ProcessID, StartTime, EndTime, WaitingTime);
+	}
 };
+
+auto changeProcess(std::vector<Process*>* readyQueue) -> Process*
+{
+	auto* process = readyQueue->front();
+	readyQueue->erase(readyQueue->begin());
+	return process;
+}
 
 void printProcessList(const std::vector<Process*> processes)
 {
-	float averageWaitingTime = 0.0f;
+	auto averageWaitingTime = 0.0f;
 	Utils::ConsoleLog::Info("Processes");
 	for (auto process : processes)
 	{
-		Utils::ConsoleLog::Info("{0} | Start Time: {1} | End Time: {2} | Waiting Time: {3}", process->ProcessID, process->StartTime, process->EndTime, process->WaitingTime);
+		process->Print();
 		averageWaitingTime += process->WaitingTime;
 	}
 
@@ -83,20 +115,13 @@ void firstComeFirstServe(const std::vector<Process> processList)
 
 		if (currentProcess != nullptr)
 		{
-			currentProcess->CPUBurst--;
-			if (currentProcess->CPUBurst <= 0)
-			{
-				currentProcess->EndTime = currentTime;
-				currentProcess = nullptr;
-			}
+			currentProcess = currentProcess->Use(currentTime);
 		}
 
 		if (currentProcess == nullptr && !readyQueue.empty())
 		{
-			currentProcess = readyQueue.front();
-			readyQueue.erase(readyQueue.begin());
-			currentProcess->StartTime = currentTime;
-			currentProcess->HasStarted = true;
+			currentProcess = changeProcess(&readyQueue);
+			currentProcess->Start(currentTime);
 		}
 		
 		currentTime++;
@@ -125,12 +150,7 @@ void shortestJobFirst(const std::vector<Process> processList)
 
 		if (currentProcess != nullptr)
 		{
-			currentProcess->CPUBurst--;
-			if (currentProcess->CPUBurst <= 0)
-			{
-				currentProcess->EndTime = currentTime;
-				currentProcess = nullptr;
-			}
+			currentProcess = currentProcess->Use(currentTime);
 		}
 
 		if (!readyQueue.empty())
@@ -146,29 +166,85 @@ void shortestJobFirst(const std::vector<Process> processList)
 				if (currentProcess->CPUBurst > readyQueue.front()->CPUBurst)
 				{
 					readyQueue.push_back(currentProcess);
-					currentProcess = readyQueue.front();
-					readyQueue.erase(readyQueue.begin());
-
-					if (!currentProcess->HasStarted)
-					{
-						currentProcess->StartTime = currentTime;
-					}
-					
+					currentProcess = changeProcess(&readyQueue);
 				}
 			}
 			else
 			{
-				currentProcess = readyQueue.front();
-				readyQueue.erase(readyQueue.begin());
-
-				if (!currentProcess->HasStarted)
-				{
-					currentProcess->StartTime = currentTime;
-				}
+				currentProcess = changeProcess(&readyQueue);
 			}
+
+			currentProcess->Start(currentTime);
 		}
 		
 		currentTime++;
+		updateWaitingTime(readyQueue);
+	} while (!readyQueue.empty() || currentProcess != nullptr);
+
+	printProcessList(processes);
+}
+
+void roundRobin(const std::vector<Process> processList, int maxTimeSlice)
+{
+	auto currentTimeSlice = 0;
+	auto currentTime = 0;
+	
+	std::vector<Process*> processes;
+	std::vector<Process*> readyQueue;
+
+	Process* currentProcess = nullptr;
+
+	for (auto process : processList)
+	{
+		processes.push_back(new Process(process.ProcessID, process.ArrivalTime, process.CPUBurst));
+	}
+
+	do
+	{
+		updateArrivalTime(processes, &readyQueue);
+
+		if (currentProcess != nullptr)
+		{
+			currentProcess = currentProcess->Use(currentTime);
+			currentTimeSlice++;
+
+			if (currentProcess == nullptr)
+			{
+				if (!readyQueue.empty())
+				{
+					currentProcess = changeProcess(&readyQueue);
+					currentProcess->Start(currentTime);
+				}
+				
+				currentTimeSlice = 0;
+			}
+
+			if (currentTimeSlice == maxTimeSlice)
+			{
+				if (currentProcess != nullptr)
+				{
+					readyQueue.push_back(currentProcess);
+				}
+
+				if (!readyQueue.empty())
+				{
+					currentProcess = changeProcess(&readyQueue);
+					currentProcess->Start(currentTime);
+				}
+				
+				currentTimeSlice = 0;
+			}
+		}
+
+		if (currentProcess == nullptr && !readyQueue.empty())
+		{
+			currentProcess = changeProcess(&readyQueue);
+			currentProcess->Start(currentTime);
+		}
+
+		currentTime++;
+		
+
 		updateWaitingTime(readyQueue);
 	} while (!readyQueue.empty() || currentProcess != nullptr);
 
@@ -202,6 +278,17 @@ auto main(int argc, char** argv) -> int
 		Process("P5", 4, 4),
 	};
 
+	const auto given3 = std::vector<Process>
+	{
+		Process("P1", 0, 4),
+	    Process("P2", 1, 5),
+	    Process("P3", 2, 2),
+		Process("P4", 3, 1),
+		Process("P5", 4, 6),
+		Process("P6", 6, 3),
+	};
+
 	// firstComeFirstServe(given);
-	shortestJobFirst(given);
+	// shortestJobFirst(given2);
+	 roundRobin(given, 5);
 }
