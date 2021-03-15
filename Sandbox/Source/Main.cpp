@@ -133,6 +133,7 @@ void firstComeFirstServe(const std::vector<Process> processList)
 
 void shortestJobFirst(const std::vector<Process> processList)
 {
+	auto numOfContextSwitch = 0;
 	auto currentTime = 0;
 	std::vector<Process*> processes;
 	std::vector<Process*> readyQueue;
@@ -167,11 +168,13 @@ void shortestJobFirst(const std::vector<Process> processList)
 				{
 					readyQueue.push_back(currentProcess);
 					currentProcess = changeProcess(&readyQueue);
+					numOfContextSwitch++;
 				}
 			}
 			else
 			{
 				currentProcess = changeProcess(&readyQueue);
+				numOfContextSwitch++;
 			}
 
 			currentProcess->Start(currentTime);
@@ -182,6 +185,7 @@ void shortestJobFirst(const std::vector<Process> processList)
 	} while (!readyQueue.empty() || currentProcess != nullptr);
 
 	printProcessList(processes);
+	Utils::ConsoleLog::Info("Num of Context Switching: {0}", numOfContextSwitch);
 }
 
 void roundRobin(const std::vector<Process> processList, int maxTimeSlice)
@@ -253,6 +257,7 @@ void roundRobin(const std::vector<Process> processList, int maxTimeSlice)
 
 void longestJobFirst(const std::vector<Process> processList)
 {
+	auto numOfContextSwitch = 0;
 	auto currentTime = 0;
 	std::vector<Process*> processes;
 	std::vector<Process*> readyQueue;
@@ -283,15 +288,17 @@ void longestJobFirst(const std::vector<Process> processList)
 
 			if (currentProcess != nullptr)
 			{
-				if (currentProcess->CPUBurst > readyQueue.front()->CPUBurst)
+				if (currentProcess->CPUBurst < readyQueue.front()->CPUBurst)
 				{
 					readyQueue.push_back(currentProcess);
 					currentProcess = changeProcess(&readyQueue);
+					numOfContextSwitch++;
 				}
 			}
 			else
 			{
 				currentProcess = changeProcess(&readyQueue);
+				numOfContextSwitch++;
 			}
 
 			currentProcess->Start(currentTime);
@@ -302,6 +309,7 @@ void longestJobFirst(const std::vector<Process> processList)
 	} while (!readyQueue.empty() || currentProcess != nullptr);
 
 	printProcessList(processes);
+	Utils::ConsoleLog::Info("Num of Context Switching: {0}", numOfContextSwitch);
 }
 
 auto main(int argc, char** argv) -> int
@@ -341,11 +349,53 @@ auto main(int argc, char** argv) -> int
 		Process("P6", 6, 3),
 	};
 
+	const auto ascendingProcess = std::vector<Process>
+	{
+		Process("P1", 0, 20),
+	    Process("P2", 0, 21),
+	    Process("P3", 0, 22),
+	    Process("P4", 0, 23),
+	    Process("P5", 0, 24),
+	    Process("P6", 0, 25),
+	};
+
+	const auto decendingProcess = std::vector<Process>
+	{
+		Process("P1", 0, 25),
+	    Process("P2", 0, 24),
+	    Process("P3", 0, 23),
+	    Process("P4", 0, 22),
+	    Process("P5", 0, 21),
+	    Process("P6", 0, 20),
+	};
+
+	const auto equalProcess = std::vector<Process>
+	{
+		Process("P1", 0, 25),
+	    Process("P2", 0, 25),
+	    Process("P3", 0, 25),
+	    Process("P4", 0, 25),
+	    Process("P5", 0, 25),
+	    Process("P6", 0, 25),
+	};
+
 	// firstComeFirstServe(given);
-	Utils::ConsoleLog::Info("Shortest Job First");
-	shortestJobFirst(given);
-	std::cout << "\n";
-	Utils::ConsoleLog::Info("Longest Job First");
-	longestJobFirst(given);
+	// shortestJobFirst(given);
 	// roundRobin(given, 5);
+	Utils::ConsoleLog::Info("Shortest Job First");
+	shortestJobFirst(ascendingProcess);
+	std::cout << "\n";
+	shortestJobFirst(decendingProcess);
+	std::cout << "\n";
+	shortestJobFirst(equalProcess);
+	
+	std::cout << "\n";
+	std::cout << "\n";
+	
+	Utils::ConsoleLog::Info("Longest Job First");
+	longestJobFirst(ascendingProcess);
+	std::cout << "\n";
+	longestJobFirst(decendingProcess);
+	std::cout << "\n";
+	longestJobFirst(equalProcess);
 }
