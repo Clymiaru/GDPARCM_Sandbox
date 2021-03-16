@@ -1,9 +1,39 @@
 #include "pch.h"
 
 #include "Utils/Log/ConsoleLog.h"
-#include "Utils/Log/FileLog.h"
+#include <thread>
 
-#include "SFML/Graphics.hpp"
+class Stopwatch
+{
+public:
+	Stopwatch() :
+        start{std::chrono::time_point<std::chrono::steady_clock>()},
+        end{std::chrono::time_point<std::chrono::steady_clock>()},
+        duration{}
+	{
+		start = std::chrono::steady_clock::now();
+	}
+
+	~Stopwatch()
+	{
+		end = std::chrono::steady_clock::now();
+		duration = end - start;
+
+		std::cout << "Duration: " << duration.count() << "us\n";
+	}
+
+private:
+	std::chrono::time_point<std::chrono::steady_clock> start;
+	std::chrono::time_point<std::chrono::steady_clock> end;
+	std::chrono::duration<float, std::micro> duration;
+	std::chrono::steady_clock highResClock;
+	
+};
+
+void testFunction(int threadID)
+{
+	std::cout << "Hello from thread " << threadID << "\n";
+}
 
 auto main(int argc, char** argv) -> int
 {
@@ -13,24 +43,11 @@ auto main(int argc, char** argv) -> int
 	Utils::ConsoleLog::Warn("Warn");
 	Utils::ConsoleLog::Error("Error");
 
-	Utils::FileLog::Log("temp.txt", "Testing {0}", 10);
-
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
-
-	while (window.isOpen())
+	for (auto i = 0; i < 20; ++i)
 	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		window.draw(shape);
-		window.display();
+		std::thread t(testFunction, i);
+		t.detach();
+		Sleep(1000);
 	}
-
+	
 }
