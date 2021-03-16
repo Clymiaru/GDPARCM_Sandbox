@@ -4,16 +4,16 @@
 
 namespace Utils
 {
-    class Random
-    {
-    public:
-        static int GetInt(int min, int max);
+	class Random
+	{
+	public:
+		static int GetInt(int min, int max);
 
-        static float GetFloat(float min, float max);
+		static float GetFloat(float min, float max);
 
-        static bool GetBool();
+		static bool GetBool();
 
-    private:
-        static std::random_device generator;
-    };
+	private:
+		static std::random_device generator;
+	};
 }

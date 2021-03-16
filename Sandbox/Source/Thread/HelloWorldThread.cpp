@@ -1,17 +1,20 @@
 ﻿#include "pch.h"
 #include "HelloWorldThread.h"
 
-HelloWorldThread::HelloWorldThread(int id)
+namespace Thread
 {
-	this->id = id;
-	Start();
-}
+	HelloWorldThread::HelloWorldThread(const int id)
+	{
+		threadID = id;
+		Start();
+	}
 
-HelloWorldThread::~HelloWorldThread()
-{
-}
+	HelloWorldThread::~HelloWorldThread()
+	{
+	}
 
-void HelloWorldThread::Run()
-{
-	std::cout << "Hello world from thread " << id << "\n";
+	void HelloWorldThread::Run()
+	{
+		std::cout << "Hello world from thread " << threadID << "\n";
+	}
 }

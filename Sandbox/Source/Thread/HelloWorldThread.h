@@ -1,14 +1,18 @@
 ﻿#pragma once
 #include <Thread/IETThread.h>
 
-class HelloWorldThread : IETThread
+namespace Thread
 {
-public:
-	HelloWorldThread(int threadID);
-	~HelloWorldThread();
+	class HelloWorldThread final : IETThread
+	{
+	public:
+		explicit HelloWorldThread(int id);
 
-protected:
-	void Run() override;
+		~HelloWorldThread();
 
-	int id;
-};
+	private:
+		void Run() override;
+
+		int threadID;
+	};
+}

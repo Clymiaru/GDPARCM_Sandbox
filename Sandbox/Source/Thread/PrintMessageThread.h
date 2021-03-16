@@ -1,16 +1,19 @@
 ﻿#pragma once
 #include "IETThread.h"
 
-class PrintMessageThread : IETThread
+namespace Thread
 {
-public:
-	PrintMessageThread(std::string toPrint, int interval);
-	~PrintMessageThread();
-	
-protected:
-	void Run() override;
+	class PrintMessageThread final : IETThread
+	{
+	public:
+		PrintMessageThread(std::string toPrint, int interval);
 
-private:
-	int timeInterval;
-	std::string message;
-};
+		~PrintMessageThread();
+
+	private:
+		void Run() override;
+
+		int timeInterval;
+		std::string message;
+	};
+}

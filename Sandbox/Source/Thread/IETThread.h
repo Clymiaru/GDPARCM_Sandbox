@@ -1,15 +1,19 @@
 ﻿#pragma once
-#include <thread>
 
-class IETThread
+namespace Thread
 {
-public:
-	IETThread();
+	class IETThread
+	{
+	public:
+		IETThread();
 
-	virtual ~IETThread();
-	
-	void Start();
-	static void Sleep(int ms);
-protected:
-	virtual void Run() = 0;
-};
+		virtual ~IETThread();
+
+		void Start();
+
+		static void Sleep(int ms);
+
+	protected:
+		virtual void Run() = 0;
+	};
+}

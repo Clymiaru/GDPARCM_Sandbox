@@ -1,22 +1,25 @@
 ﻿#include "pch.h"
 #include "PrintMessageThread.h"
 
-PrintMessageThread::PrintMessageThread(std::string toPrint, int interval) :
-	timeInterval{interval},
-	message{std::move(toPrint)}
+namespace Thread
 {
-	Start();
-}
-
-PrintMessageThread::~PrintMessageThread()
-{
-}
-
-void PrintMessageThread::Run()
-{
-	while (true)
+	PrintMessageThread::PrintMessageThread(std::string toPrint, const int interval) :
+		timeInterval{interval},
+		message{std::move(toPrint)}
 	{
-		std::cout << message << "\n";
-		IETThread::Sleep(timeInterval);
+		Start();
+	}
+
+	PrintMessageThread::~PrintMessageThread()
+	{
+	}
+
+	void PrintMessageThread::Run()
+	{
+		while (true)
+		{
+			std::cout << message << "\n";
+			Sleep(timeInterval);
+		}
 	}
 }

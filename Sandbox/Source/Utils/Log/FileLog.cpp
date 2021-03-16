@@ -23,7 +23,7 @@ namespace Utils
 
 	SharedPtr<spdlog::logger> FileLog::CreateFileLogger(const std::string& filename)
 	{
-		auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("Logs/" + filename);
+		auto sink   = std::make_shared<spdlog::sinks::basic_file_sink_mt>("Logs/" + filename);
 		auto logger = createSharedPtr<spdlog::logger>(FILE_LOG_PREFIX + filename, sink);
 		logger->set_level(spdlog::level::trace);
 		logger->set_pattern("%^[%T]\n\t%v%$");
