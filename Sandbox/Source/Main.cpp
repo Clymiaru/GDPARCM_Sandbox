@@ -2,10 +2,8 @@
 
 #include <thread>
 #include "Utils/Log/ConsoleLog.h"
-#include "Thread/HelloWorldThread.h"
+
 #include "Thread/PrintMessageThread.h"
-
-
 
 auto main(int argc, char** argv) -> int
 {
