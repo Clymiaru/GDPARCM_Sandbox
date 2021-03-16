@@ -6,13 +6,18 @@ namespace Thread
 	class PrintMessageThread final : IETThread
 	{
 	public:
-		PrintMessageThread(std::string toPrint, int interval);
+		PrintMessageThread(int id, std::string toPrint, int interval);
+		~PrintMessageThread() override = default;
 
-		~PrintMessageThread();
+		PrintMessageThread(const PrintMessageThread& other) = delete;
+		PrintMessageThread(PrintMessageThread&& other) noexcept = delete;
+		auto operator=(const PrintMessageThread& other) -> PrintMessageThread& = delete;
+		auto operator=(PrintMessageThread&& other) noexcept -> PrintMessageThread& = delete;
 
 	private:
 		void Run() override;
 
+		int threadID;
 		int timeInterval;
 		std::string message;
 	};

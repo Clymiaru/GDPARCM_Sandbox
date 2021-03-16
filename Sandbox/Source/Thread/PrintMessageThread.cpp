@@ -3,22 +3,20 @@
 
 namespace Thread
 {
-	PrintMessageThread::PrintMessageThread(std::string toPrint, const int interval) :
+	PrintMessageThread::PrintMessageThread(const int id, std::string toPrint, const int interval) :
+		threadID{id},
 		timeInterval{interval},
 		message{std::move(toPrint)}
 	{
+		message += " from thread " + std::to_string(threadID) + "\n";
 		Start();
-	}
-
-	PrintMessageThread::~PrintMessageThread()
-	{
 	}
 
 	void PrintMessageThread::Run()
 	{
 		while (true)
 		{
-			std::cout << message << "\n";
+			std::cout << message;
 			Sleep(timeInterval);
 		}
 	}

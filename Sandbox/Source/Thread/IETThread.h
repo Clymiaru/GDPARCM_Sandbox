@@ -5,12 +5,15 @@ namespace Thread
 	class IETThread
 	{
 	public:
-		IETThread();
+		IETThread() = default;
+		virtual ~IETThread() = default;
 
-		virtual ~IETThread();
+		IETThread(const IETThread& other) = delete;
+		IETThread(IETThread&& other) noexcept = delete;
+		auto operator=(const IETThread& other) -> IETThread& = delete;
+		auto operator=(IETThread&& other) noexcept -> IETThread& = delete;
 
 		void Start();
-
 		static void Sleep(int ms);
 
 	protected:

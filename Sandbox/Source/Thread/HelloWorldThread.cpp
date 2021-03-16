@@ -9,10 +9,6 @@ namespace Thread
 		Start();
 	}
 
-	HelloWorldThread::~HelloWorldThread()
-	{
-	}
-
 	void HelloWorldThread::Run()
 	{
 		std::cout << "Hello world from thread " << threadID << "\n";
