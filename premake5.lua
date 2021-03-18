@@ -26,6 +26,10 @@ SourceDir = "%{ProjectName}/Source"
 Dependencies = {}
 Dependencies["Log"] = "%{DependencyDir}/spdlog"
 Dependencies["SFML"] = "%{DependencyDir}/SFML"
+Dependencies["glad"] = "%{DependencyDir}/glad"
+Dependencies["glm"] = "%{DependencyDir}/glm"
+
+include "Sandbox/Library/glad"
 
 project (GameName)
 	location (GameName)
@@ -49,6 +53,8 @@ project (GameName)
         "%{prj.name}/Source",
         "%{Dependencies.Log}/include",
         "%{Dependencies.SFML}/include",
+        "%{Dependencies.glad}",
+         "%{Dependencies.glm}",
 	}
 
 	defines {
@@ -78,6 +84,7 @@ project (GameName)
 	    symbols "on"
 
 	    links {
+	        "glad",
 			"opengl32.lib",
             "freetype.lib",
             "winmm.lib",

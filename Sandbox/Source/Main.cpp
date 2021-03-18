@@ -6,7 +6,12 @@
 
 #include "Utils/Log/ConsoleLog.h"
 
+
 #include "Thread/PrintMessageThread.h"
+
+#include "SFML/Graphics.hpp"
+#include "glad.h"
+
 
 #include "Utils/Random.h"
 
