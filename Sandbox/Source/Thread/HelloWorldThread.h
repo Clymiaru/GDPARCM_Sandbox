@@ -14,6 +14,7 @@ namespace Thread
 		auto operator=(const HelloWorldThread& other) -> HelloWorldThread& = delete;
 		auto operator=(HelloWorldThread&& other) noexcept -> HelloWorldThread& = delete;
 
+	
 	private:
 		void Run() override;
 		int threadID;

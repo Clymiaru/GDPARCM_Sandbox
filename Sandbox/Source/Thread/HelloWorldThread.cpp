@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "HelloWorldThread.h"
 
+// TODO: Start and Stop on command implementation
 namespace Thread
 {
 	HelloWorldThread::HelloWorldThread(const int id)

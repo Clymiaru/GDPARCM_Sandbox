@@ -18,5 +18,9 @@ namespace Thread
 
 	protected:
 		virtual void Run() = 0;
+
+	private:
+		bool isRunning;
+
 	};
 }
