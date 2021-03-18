@@ -1,37 +1,76 @@
 #include "pch.h"
 
+#include <thread>
+
+#include "Thread/HelloWorldThread.h"
+
 #include "Utils/Log/ConsoleLog.h"
-#include "Utils/Log/FileLog.h"
+
+
+#include "Thread/PrintMessageThread.h"
 
 #include "SFML/Graphics.hpp"
 #include "glad.h"
 
+
+#include "Utils/Random.h"
+
+void doHelloWorldWithThreads(const int iterations)
+{
+	for (auto i = 0; i < iterations; ++i)
+	{
+		new Thread::HelloWorldThread(i);
+	}
+}
+
+void doPrintMessageWithThreads(const std::vector<std::string>& messages)
+{
+	for (size_t i = 0; i < messages.size(); ++i)
+	{
+		new Thread::PrintMessageThread(i, messages[i], 0);
+	}
+}
+
+void doRandomPrintMessageWithThreads(const std::vector<std::string>& messages)
+{
+	const auto minRandRange = 1;
+	const auto maxRandRange = 5;
+	
+	for (size_t i = 0; i < messages.size(); i++)
+	{
+		new Thread::PrintMessageThread(i, messages[i], 
+								Utils::Random::GetInt(minRandRange, maxRandRange));
+	}
+}
+
 auto main(int argc, char** argv) -> int
 {
-	Utils::ConsoleLog::Init();
-	Utils::ConsoleLog::Trace("Trace");
-	Utils::ConsoleLog::Info("Info");
-	Utils::ConsoleLog::Warn("Warn");
-	Utils::ConsoleLog::Error("Error");
-
-	Utils::FileLog::Log("temp.txt", "Testing {0}", 10);
-
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
-
-	while (window.isOpen())
+	const std::vector<std::string> messages
 	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		window.draw(shape);
-		window.display();
-	}
-
+		"Hello world",
+		"Kira, Kira, Mahorin~",
+		"Labyrinth",
+		"Pudding!",
+		"Crystal",
+		"If we put a fence, we'll have more de-fence!",
+		"Blubberino",
+		"Time flies like an arrow rain",
+		"A stitch in thyme",
+		"A little learning is an arduous thing",
+		"Rags to britches",
+		"Jealous Nyatt",
+		"Ultra Misogi Trap!!",
+		"Trapology 101",
+		"Pudding Paradise",
+		"The path of Pudding",
+		"Pudding Knight!",
+		"Nyan Justice",
+		"Ame-Same",
+		"Sus!",
+	};
+	
+	// doHelloWorldWithThreads(20);
+	// doPrintMessageWithThreads(messages);
+	doRandomPrintMessageWithThreads(messages);
+	Thread::IETThread::Sleep(10 * 1000);
 }
