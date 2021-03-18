@@ -11,8 +11,8 @@ SharedPtr<spdlog::logger> Utils::ConsoleLog::logger;
 void Utils::ConsoleLog::Init()
 {
 #if DEBUG
-    logger = spdlog::stdout_color_mt("CONSOLE_LOG");
-    logger->set_level(spdlog::level::trace);
-    logger->set_pattern("%^[%T] %n: %v%$");
+	logger = spdlog::stdout_color_mt("CONSOLE_LOG");
+	logger->set_level(spdlog::level::trace);
+	logger->set_pattern("%^[%T] %n: %v%$");
 #endif
 }
