@@ -6,31 +6,41 @@
 #include "SFML/Graphics.hpp"
 #include "glad.h"
 
+#include "Utils/Log/Assert.h"
+
 auto main(int argc, char** argv) -> int
 {
 	Utils::ConsoleLog::Init();
-	Utils::ConsoleLog::Trace("Trace");
-	Utils::ConsoleLog::Info("Info");
-	Utils::ConsoleLog::Warn("Warn");
-	Utils::ConsoleLog::Error("Error");
 
-	Utils::FileLog::Log("temp.txt", "Testing {0}", 10);
+	sf::Window window(sf::VideoMode(1280, 720),
+		"SFML OpenGL(glad) Integration!",
+		sf::Style::Default,
+		sf::ContextSettings(24));
+	window.setVerticalSyncEnabled(true);
 
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	ASSERT(window.setActive(true), "Window cannot be set to active!");
+	
+	gladLoadGL();
 
-	while (window.isOpen())
+	bool isRunning = true;
+	while (isRunning)
 	{
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				window.close();
+			{
+				isRunning = false;
+			}
+			else if (event.type == sf::Event::Resized)
+			{
+				glViewport(0, 0, event.size.width, event.size.height);
+			}
 		}
 
-		window.clear();
-		window.draw(shape);
+		glClearColor(1.0f, 0.0f, 0.0f ,1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		window.display();
 	}
 
